@@ -25,11 +25,11 @@ kotlin {
     }
     
     sourceSets {
-        
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
         }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -37,6 +37,22 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
+            implementation(libs.navigator)
+            implementation(libs.navigator.screen.model)
+            implementation(libs.navigator.transitions)
+            implementation(libs.navigator.koin)
+            implementation(libs.koin.core)
+            implementation(libs.kotlin.coroutines)
+
+            implementation(libs.coil3.coil.compose)
+            implementation(libs.coil.network.ktor)
+        }
+
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.constraintlayout.compose.multiplatform)
+            }
         }
     }
 
