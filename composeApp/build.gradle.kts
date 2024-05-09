@@ -12,7 +12,7 @@ kotlin {
             }
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -23,13 +23,8 @@ kotlin {
             isStatic = true
         }
     }
-    
-    sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.androidx.activity.compose)
-        }
 
+    sourceSets {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -52,6 +47,20 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.constraintlayout.compose.multiplatform)
+                implementation(libs.kamel.image)
+                implementation(libs.ktor.client.core)
+            }
+        }
+
+        androidMain.dependencies {
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.android)
+        }
+
+        val iosMain by creating {
+            dependencies {
+                implementation(libs.ktor.client.darwin)
             }
         }
     }

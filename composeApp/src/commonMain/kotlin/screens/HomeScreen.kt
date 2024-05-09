@@ -1,74 +1,98 @@
 package screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil3.compose.AsyncImage
-import masterradcomposemultiplatform.composeapp.generated.resources.Res
-import masterradcomposemultiplatform.composeapp.generated.resources.compose_multiplatform
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 
 @Composable
 fun HomeScreen() {
-    Column(modifier = Modifier.fillMaxSize().background(color = Color.White)) {
-        HomeScreenImage("https://picsum.photos/200")
+    Column(
+        modifier = Modifier.fillMaxSize().background(color = Color.White),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
+    ) {
+        HomeScreenImage(imageUrl = "https://images.unsplash.com/photo-1656106534627-0fef76c8b042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=450&h=420")
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Breaking News",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight(700)
+                )
+            )
+
+            Text(
+                text = "More",
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    color = Color.Black
+                )
+            )
+        }
     }
 }
 
 @Composable
 fun HomeScreenImage(imageUrl: String) {
-    ConstraintLayout(modifier = Modifier.fillMaxWidth().clip(shape = RoundedCornerShape(16.dp))) {
+    ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
         val (image, imageText) = createRefs()
 
-        AsyncImage(
-            modifier = Modifier.fillMaxSize().constrainAs(image) {},
-            model = imageUrl,
+        KamelImage(
+            modifier = Modifier
+                .padding(top = 50.dp)
+                .height(400.dp)
+                .fillMaxWidth()
+                .constrainAs(image) {},
+            resource = asyncPainterResource(imageUrl),
             contentDescription = null
         )
 
         Column(
             modifier = Modifier
-                .padding(bottom = 16.dp)
+                .padding(bottom = 32.dp, start = 16.dp)
                 .constrainAs(imageText) {
-                    bottom.linkTo(parent.bottom)
+                    bottom.linkTo(image.bottom)
                     start.linkTo(parent.start)
                 },
-            verticalArrangement = Arrangement.SpaceEvenly,
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
                 modifier = Modifier
                     .background(
                         shape = RoundedCornerShape(16.dp),
-                        color = Color.LightGray
+                        color = Color.Gray.copy(alpha = 0.6f)
                     )
-                    .padding(8.dp),
+                    .padding(12.dp),
                 text = "News of the Day",
                 style = TextStyle(
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     color = Color.White
                 )
             )
@@ -91,17 +115,25 @@ fun HomeScreenImage(imageUrl: String) {
                     modifier = Modifier.padding(4.dp),
                     text = "Learn more",
                     style = TextStyle(
-                        fontSize = 12.sp,
+                        fontSize = 14.sp,
                         color = Color.White
                     )
                 )
 
                 Icon(
-                    modifier = Modifier.background(color = Color.White),
+                    modifier = Modifier,
+                    tint = Color.White,
                     imageVector = Icons.AutoMirrored.Default.ArrowForward,
                     contentDescription = null
                 )
             }
         }
+    }
+}
+
+@Composable
+fun BreakingNewsList() {
+    LazyRow(modifier = Modifier.padding(horizontal = 12.dp)) {
+
     }
 }
