@@ -49,6 +49,13 @@ kotlin {
                 implementation(libs.constraintlayout.compose.multiplatform)
                 implementation(libs.kamel.image)
                 implementation(libs.ktor.client.core)
+
+                implementation(libs.koin.core.v343)
+                implementation(libs.koin.compose)
+
+                implementation(libs.precompose)
+                implementation(libs.precompose.viewmodel)
+                implementation(libs.precompose.koin)
             }
         }
 

@@ -8,53 +8,54 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import models.ArticleModel
+import viewModels.HomeViewModel
+
+class HomeScreen : Screen {
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.current
+        val viewModel = getScreenModel<HomeViewModel>()
+        HomeScreenRoot(navigator, viewModel)
+    }
+
+}
 
 @Composable
-fun HomeScreen() {
+fun HomeScreenRoot(navigator: Navigator?, viewModel: HomeViewModel) {
     Column(
         modifier = Modifier.fillMaxSize().background(color = Color.White),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
     ) {
         HomeScreenImage(imageUrl = "https://images.unsplash.com/photo-1656106534627-0fef76c8b042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=450&h=420")
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Breaking News",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight(700)
-                )
-            )
-
-            Text(
-                text = "More",
-                style = TextStyle(
-                    fontSize = 15.sp,
-                    color = Color.Black
-                )
-            )
-        }
+        BreakingNewsTitle()
+        BreakingNewsList(viewModel.getArticles())
     }
 }
 
@@ -132,8 +133,97 @@ fun HomeScreenImage(imageUrl: String) {
 }
 
 @Composable
-fun BreakingNewsList() {
-    LazyRow(modifier = Modifier.padding(horizontal = 12.dp)) {
+fun BreakingNewsTitle() {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Breaking News",
+            style = TextStyle(
+                fontSize = 24.sp,
+                color = Color.Black,
+                fontWeight = FontWeight(700)
+            )
+        )
 
+        Text(
+            text = "More",
+            style = TextStyle(
+                fontSize = 15.sp,
+                color = Color.Black
+            )
+        )
+    }
+}
+
+@Composable
+fun BreakingNewsList(articles: List<ArticleModel>) {
+    LazyRow(
+        modifier = Modifier.padding(horizontal = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(
+            items = articles,
+            key = { it.id }
+        ) { article ->
+            ArticleRowItem(article)
+        }
+    }
+}
+
+@Composable
+fun ArticleRowItem(articleModel: ArticleModel) {
+    Column(
+        modifier = Modifier.width(200.dp).background(color = Color.White),
+        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top)
+    ) {
+        Card(
+            modifier = Modifier
+                .background(
+                    shape = RoundedCornerShape(24.dp),
+                    color = Color.White
+                )
+                .height(130.dp)
+        ) {
+            KamelImage(
+                modifier = Modifier.height(150.dp).width(200.dp),
+                resource = asyncPainterResource(articleModel.imageUrl),
+                contentDescription = null
+            )
+        }
+
+        Text(
+            modifier = Modifier.padding(top = 4.dp, start = 4.dp),
+            text = articleModel.title,
+            style = TextStyle(
+                fontSize = 13.sp,
+                color = Color.Black,
+                letterSpacing = 0.24.sp,
+                fontWeight = FontWeight(700)
+            ),
+            maxLines = 2
+        )
+
+        Text(
+            modifier = Modifier.padding(start = 4.dp),
+            text = articleModel.createdAt,
+            style = TextStyle(
+                fontSize = 12.sp,
+                color = Color.LightGray
+            ),
+            maxLines = 1
+        )
+
+        Text(
+            modifier = Modifier.padding(start = 4.dp),
+            text = articleModel.author,
+            style = TextStyle(
+                fontSize = 12.sp,
+                color = Color.LightGray
+            ),
+            maxLines = 1
+        )
     }
 }
