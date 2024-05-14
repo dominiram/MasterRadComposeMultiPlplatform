@@ -1,19 +1,21 @@
 package tabs
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
-import screens.HomeScreen
+import screens.ProfileScreen
+import screens.SearchScreen
 
-object HomeTab : Tab {
+object ProfileTab : Tab {
     @Composable
     override fun Content() {
-        Navigator(screen = HomeScreen()) { navigator ->
+        Navigator(screen = ProfileScreen()) { navigator ->
             SlideTransition(navigator = navigator)
         }
     }
@@ -21,10 +23,10 @@ object HomeTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val index: UShort = 0u
+            val index: UShort = 2u
 
             return TabOptions(
-                icon = rememberVectorPainter(Icons.Default.Home),
+                icon = rememberVectorPainter(Icons.Default.Person),
                 index = index,
                 title = ""
             )
