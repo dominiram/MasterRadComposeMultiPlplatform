@@ -209,7 +209,7 @@ fun ArticleRowItem(articleModel: ArticleModel) {
             text = articleModel.createdAt,
             style = TextStyle(
                 fontSize = 12.sp,
-                color = Color.LightGray
+                color = Color.Gray
             ),
             maxLines = 1
         )
@@ -219,7 +219,7 @@ fun ArticleRowItem(articleModel: ArticleModel) {
             text = articleModel.author,
             style = TextStyle(
                 fontSize = 12.sp,
-                color = Color.LightGray
+                color = Color.Gray
             ),
             maxLines = 1
         )
