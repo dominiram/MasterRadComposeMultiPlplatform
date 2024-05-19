@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -30,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -53,7 +53,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import models.ArticleModel
 import viewModels.HomeViewModel
@@ -168,8 +167,18 @@ fun ArticlesPager(articles: List<ArticleModel>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         ScrollableTabRow(
             modifier = Modifier.fillMaxWidth(),
-            selectedTabIndex = selectedTab,
+            selectedTabIndex = pagerState.currentPage,
             edgePadding = 0.dp,
+            indicator = { tabPositions ->
+                SecondaryIndicator(
+                    modifier = Modifier
+                        .tabIndicatorOffset(tabPositions[pagerState.currentPage])
+                        .fillMaxWidth(),
+                    color = Color.Black,
+                    height = 2.dp
+                )
+            },
+            divider = {}
         ) {
             for (i in 0 until pagerState.pageCount) {
                 Tab(
@@ -192,10 +201,7 @@ fun ArticlesPager(articles: List<ArticleModel>) {
             }
         }
 
-        HorizontalPager(
-            state = pagerState,
-            flingBehavior = PagerDefaults.flingBehavior(state = pagerState)
-        ) {
+        HorizontalPager(state = pagerState) {
             TabPage(articles)
         }
     }
