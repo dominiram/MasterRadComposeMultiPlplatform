@@ -2,15 +2,21 @@ package screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -18,11 +24,12 @@ import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.TabRow
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -31,10 +38,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
@@ -43,10 +50,19 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import models.ArticleModel
+import viewModels.HomeViewModel
 
 class SearchScreen : Screen {
     @Composable
     override fun Content() {
+        val viewModel = getScreenModel<HomeViewModel>()
+
         Column(
             modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
@@ -54,7 +70,7 @@ class SearchScreen : Screen {
         ) {
             TitleContainer()
             SearchContainer()
-            ArticlesPager()
+            ArticlesPager(viewModel.getArticles())
         }
     }
 }
@@ -144,17 +160,120 @@ fun SearchContainer() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ArticlesPager() {
+fun ArticlesPager(articles: List<ArticleModel>) {
     val pagerState = rememberPagerState(initialPage = 0) { 5 }
     var selectedTab by remember { mutableIntStateOf(pagerState.currentPage) }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        TabRow(selectedTabIndex = selectedTab) {
-
+        ScrollableTabRow(
+            modifier = Modifier.fillMaxWidth(),
+            selectedTabIndex = selectedTab,
+            edgePadding = 0.dp,
+        ) {
+            for (i in 0 until pagerState.pageCount) {
+                Tab(
+                    modifier = Modifier.wrapContentSize().padding(8.dp),
+                    selected = i == selectedTab,
+                    onClick = {
+                        selectedTab = i
+                        coroutineScope.launch { pagerState.animateScrollToPage(selectedTab) }
+                    }
+                ) {
+                    Text(
+                        text = getTextForTab(i),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight(600)
+                        )
+                    )
+                }
+            }
         }
 
-        HorizontalPager(state = pagerState) {
-
+        HorizontalPager(
+            state = pagerState,
+            flingBehavior = PagerDefaults.flingBehavior(state = pagerState)
+        ) {
+            TabPage(articles)
         }
     }
+}
+
+@Composable
+fun TabPage(articles: List<ArticleModel>) {
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        items(
+            items = articles,
+            key = { it.id }
+        ) {
+            ArticleColumnItem(it)
+        }
+    }
+}
+
+@Composable
+fun ArticleColumnItem(article: ArticleModel) {
+    Row(modifier = Modifier) {
+        KamelImage(
+            modifier = Modifier.height(80.dp).width(80.dp),
+            resource = asyncPainterResource(article.imageUrl),
+            contentDescription = null
+        )
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 4.dp, start = 4.dp),
+                text = article.title,
+                style = TextStyle(
+                    fontSize = 13.sp,
+                    color = Color.Black,
+                    letterSpacing = 0.24.sp,
+                    fontWeight = FontWeight(700)
+                ),
+                maxLines = 2
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(space = 16.dp, Alignment.Start),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(imageVector = Icons.Default.Star, contentDescription = null)
+
+                Text(
+                    modifier = Modifier.padding(start = 4.dp),
+                    text = article.createdAt,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    ),
+                    maxLines = 1
+                )
+
+                Icon(imageVector = Icons.Default.Star, contentDescription = null)
+
+                Text(
+                    modifier = Modifier.padding(start = 4.dp),
+                    text = article.author,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    ),
+                    maxLines = 1
+                )
+            }
+        }
+    }
+}
+
+fun getTextForTab(index: Int) = when (index) {
+    0 -> "Health"
+    1 -> "Politics"
+    2 -> "Art"
+    3 -> "Food"
+    else -> "Science"
 }
