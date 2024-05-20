@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,10 +52,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.launch
 import models.ArticleModel
+import utils.RoundedCornerAsyncImage
 import viewModels.HomeViewModel
 
 class SearchScreen : Screen {
@@ -111,7 +111,7 @@ fun SearchContainer() {
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             modifier = Modifier
-                .padding(top = 16.dp)
+                .padding(top = 12.dp)
                 .fillMaxWidth()
                 .background(color = Color(0xFFF2F2F2), shape = RoundedCornerShape(16.dp)),
             value = text,
@@ -209,7 +209,10 @@ fun ArticlesPager(articles: List<ArticleModel>) {
 
 @Composable
 fun TabPage(articles: List<ArticleModel>) {
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
+    ) {
         items(
             items = articles,
             key = { it.id }
@@ -222,18 +225,19 @@ fun TabPage(articles: List<ArticleModel>) {
 @Composable
 fun ArticleColumnItem(article: ArticleModel) {
     Row(modifier = Modifier) {
-        KamelImage(
-            modifier = Modifier.height(80.dp).width(80.dp),
-            resource = asyncPainterResource(article.imageUrl),
-            contentDescription = null
+        RoundedCornerAsyncImage(
+            modifier = Modifier,
+            imageUrl = article.imageUrl,
+            width = 80,
+            height = 80
         )
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                modifier = Modifier.padding(top = 4.dp, start = 4.dp),
+                modifier = Modifier.padding(start = 16.dp),
                 text = article.title,
                 style = TextStyle(
                     fontSize = 13.sp,
@@ -245,10 +249,16 @@ fun ArticleColumnItem(article: ArticleModel) {
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(space = 16.dp, Alignment.Start),
+                modifier = Modifier.padding(start = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(space = 2.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(imageVector = Icons.Default.Star, contentDescription = null)
+                Icon(
+                    modifier = Modifier.height(16.dp).width(16.dp),
+                    imageVector = Icons.Default.DateRange,
+                    tint = Color.Gray,
+                    contentDescription = null
+                )
 
                 Text(
                     modifier = Modifier.padding(start = 4.dp),

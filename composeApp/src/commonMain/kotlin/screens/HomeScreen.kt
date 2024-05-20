@@ -33,6 +33,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import models.ArticleModel
+import utils.RoundedCornerAsyncImage
 import viewModels.HomeViewModel
 
 class HomeScreen : Screen {
@@ -177,20 +178,12 @@ fun ArticleRowItem(articleModel: ArticleModel) {
         modifier = Modifier.width(200.dp).background(color = Color.White),
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top)
     ) {
-        Card(
-            modifier = Modifier
-                .background(
-                    shape = RoundedCornerShape(24.dp),
-                    color = Color.White
-                )
-                .height(130.dp)
-        ) {
-            KamelImage(
-                modifier = Modifier.height(150.dp).width(200.dp),
-                resource = asyncPainterResource(articleModel.imageUrl),
-                contentDescription = null
-            )
-        }
+        RoundedCornerAsyncImage(
+            modifier = Modifier,
+            imageUrl = articleModel.imageUrl,
+            height = 150,
+            width = 200
+        )
 
         Text(
             modifier = Modifier.padding(top = 4.dp, start = 4.dp),
