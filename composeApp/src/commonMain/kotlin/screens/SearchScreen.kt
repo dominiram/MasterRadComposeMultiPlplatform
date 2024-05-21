@@ -22,9 +22,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ScrollableTabRow
@@ -35,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -54,19 +53,19 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import kotlinx.coroutines.launch
 import masterradcomposemultiplatform.composeapp.generated.resources.Res
-import masterradcomposemultiplatform.composeapp.generated.resources.compose_multiplatform
 import masterradcomposemultiplatform.composeapp.generated.resources.ic_schedule
 import masterradcomposemultiplatform.composeapp.generated.resources.ic_visibility
 import models.ArticleModel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import utils.RoundedCornerAsyncImage
-import viewModels.HomeViewModel
+import viewModels.SearchViewModel
 
 class SearchScreen : Screen {
     @Composable
     override fun Content() {
-        val viewModel = getScreenModel<HomeViewModel>()
+        val viewModel = getScreenModel<SearchViewModel>()
+        val articles by viewModel.articles.collectAsState()
 
         Column(
             modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
@@ -75,7 +74,7 @@ class SearchScreen : Screen {
         ) {
             TitleContainer()
             SearchContainer()
-            ArticlesPager(viewModel.getArticles())
+            ArticlesPager(articles)
         }
     }
 }

@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import repository.ArticleRepository
 import repository.ArticleRepositoryImpl
 import viewModels.HomeViewModel
+import viewModels.SearchViewModel
 
 fun initKoin() = startKoin {
     modules(homeViewModelModule)
@@ -13,4 +14,5 @@ fun initKoin() = startKoin {
 val homeViewModelModule = module {
     single<ArticleRepository> { ArticleRepositoryImpl() }
     factory { HomeViewModel(get()) }
+    factory { SearchViewModel(get()) }
 }

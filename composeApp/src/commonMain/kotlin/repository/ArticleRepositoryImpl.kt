@@ -1,9 +1,15 @@
 package repository
 
+import kotlinx.coroutines.flow.flow
 import models.ArticleModel
 
-class ArticleRepositoryImpl : ArticleRepository{
-    override fun getArticles() = arrayListOf(
+class ArticleRepositoryImpl : ArticleRepository {
+    override fun getStaticArticles(): List<ArticleModel> = articles
+
+    override fun getArticles(searchText: String?) =
+        flow { emit(articles.filter { it.title.contains(searchText ?: "") }) }
+
+    private val articles = arrayListOf(
         ArticleModel(
             id = 1,
             title = "Lorem ipsum dolor sit amet, consectetur elit. Cras molestie maximus",
