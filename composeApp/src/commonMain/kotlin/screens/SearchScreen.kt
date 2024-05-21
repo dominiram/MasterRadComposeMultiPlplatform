@@ -53,7 +53,13 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import kotlinx.coroutines.launch
+import masterradcomposemultiplatform.composeapp.generated.resources.Res
+import masterradcomposemultiplatform.composeapp.generated.resources.compose_multiplatform
+import masterradcomposemultiplatform.composeapp.generated.resources.ic_schedule
+import masterradcomposemultiplatform.composeapp.generated.resources.ic_visibility
 import models.ArticleModel
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import utils.RoundedCornerAsyncImage
 import viewModels.HomeViewModel
 
@@ -222,9 +228,13 @@ fun TabPage(articles: List<ArticleModel>) {
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ArticleColumnItem(article: ArticleModel) {
-    Row(modifier = Modifier) {
+    Row(
+        modifier = Modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         RoundedCornerAsyncImage(
             modifier = Modifier,
             imageUrl = article.imageUrl,
@@ -233,7 +243,7 @@ fun ArticleColumnItem(article: ArticleModel) {
         )
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
@@ -250,13 +260,13 @@ fun ArticleColumnItem(article: ArticleModel) {
 
             Row(
                 modifier = Modifier.padding(start = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(space = 2.dp, Alignment.Start),
+                horizontalArrangement = Arrangement.spacedBy(space = 0.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     modifier = Modifier.height(16.dp).width(16.dp),
-                    imageVector = Icons.Default.DateRange,
-                    tint = Color.Gray,
+                    painter = painterResource(Res.drawable.ic_schedule),
+                    tint = Color.DarkGray,
                     contentDescription = null
                 )
 
@@ -265,19 +275,24 @@ fun ArticleColumnItem(article: ArticleModel) {
                     text = article.createdAt,
                     style = TextStyle(
                         fontSize = 12.sp,
-                        color = Color.Gray
+                        color = Color.DarkGray
                     ),
                     maxLines = 1
                 )
 
-                Icon(imageVector = Icons.Default.Star, contentDescription = null)
+                Icon(
+                    modifier = Modifier.padding(start = 24.dp).height(18.dp).width(18.dp),
+                    painter = painterResource(Res.drawable.ic_visibility),
+                    tint = Color.DarkGray,
+                    contentDescription = null
+                )
 
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = article.author,
+                    text = "${article.views} views",
                     style = TextStyle(
                         fontSize = 12.sp,
-                        color = Color.Gray
+                        color = Color.DarkGray
                     ),
                     maxLines = 1
                 )
