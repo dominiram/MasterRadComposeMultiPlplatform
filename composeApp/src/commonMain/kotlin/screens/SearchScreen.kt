@@ -73,7 +73,7 @@ class SearchScreen : Screen {
             horizontalAlignment = Alignment.Start
         ) {
             TitleContainer()
-            SearchContainer()
+            SearchContainer() { searchText -> viewModel.getArticles(searchText) }
             ArticlesPager(articles)
         }
     }
@@ -105,7 +105,7 @@ fun TitleContainer() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchContainer() {
+fun SearchContainer(doSearch: (String) -> Unit) {
     val customTextSelectionColors = TextSelectionColors(
         handleColor = Color.Gray,
         backgroundColor = Color.Gray
@@ -122,6 +122,7 @@ fun SearchContainer() {
             value = text,
             onValueChange = {
                 text = it
+                doSearch(text)
             },
             singleLine = true,
             cursorBrush = SolidColor(Color.Gray),
