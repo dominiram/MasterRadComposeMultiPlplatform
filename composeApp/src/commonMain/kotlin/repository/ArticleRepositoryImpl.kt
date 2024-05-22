@@ -6,12 +6,11 @@ import models.ArticleModel
 class ArticleRepositoryImpl : ArticleRepository {
     override fun getStaticArticles(): List<ArticleModel> = articles
 
-    override fun getArticles(searchText: String?) =
-        flow {
-            emit(articles.filter {
-                it.title.lowercase().contains(searchText?.lowercase() ?: "")
-            })
-        }
+    override fun getArticles(searchText: String?) = flow {
+        emit(articles.filter {
+            it.title.lowercase().contains(searchText?.lowercase() ?: "")
+        })
+    }
 
     private val articles = arrayListOf(
         ArticleModel(
