@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +30,6 @@ import masterradcomposemultiplatform.composeapp.generated.resources.Res
 import masterradcomposemultiplatform.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.vectorResource
 import viewModels.ProfileViewModel
 
 class ProfileScreen : Screen {
@@ -48,7 +48,7 @@ fun ProfileScreenRoot(viewModel: ProfileViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProfileIcon()
-
+        ProfileFields()
     }
 }
 
@@ -125,7 +125,7 @@ fun EditTextWithLabelAbove(
             text = label,
             style = TextStyle(
                 color = Color.LightGray,
-                fontSize = 11.sp
+                fontSize = 12.sp
             )
         )
 
@@ -136,6 +136,11 @@ fun EditTextWithLabelAbove(
             textStyle = TextStyle(
                 color = Color.Black,
                 fontSize = 17.sp,
+            ),
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent
             )
         )
     }
