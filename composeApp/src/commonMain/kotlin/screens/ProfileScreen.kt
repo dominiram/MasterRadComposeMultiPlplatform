@@ -1,14 +1,21 @@
 package screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -22,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
@@ -49,28 +57,36 @@ fun ProfileScreenRoot(viewModel: ProfileViewModel) {
     ) {
         ProfileIcon()
         ProfileFields()
+        SaveDataButton()
     }
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ProfileIcon() {
-    Column(
-        modifier = Modifier.height(160.dp).width(160.dp)
+    Box(
+        modifier = Modifier.padding(top = 70.dp).height(160.dp).width(160.dp)
     ) {
         //TODO: image url / image from storage instead of Res.drawable...
         Image(
-            modifier = Modifier.height(150.dp).width(150.dp),
+            modifier = Modifier.height(200.dp).width(200.dp),
             painter = painterResource(Res.drawable.compose_multiplatform),
             contentDescription = null
         )
 
-        //TODO: Replace this with FloatingActionButton
-        Icon(
-            modifier = Modifier.align(Alignment.End).height(50.dp).width(50.dp),
-            imageVector = Icons.Default.Edit,
-            contentDescription = null
-        )
+        FloatingActionButton(
+            modifier = Modifier.align(Alignment.BottomEnd).height(45.dp).width(45.dp),
+            shape = CircleShape,
+            contentColor = Color.Gray,
+            containerColor = Color.White,
+            onClick = {},
+        ) {
+            Icon(
+                modifier = Modifier,
+                imageVector = Icons.Default.Edit,
+                contentDescription = null
+            )
+        }
     }
 }
 
@@ -82,14 +98,14 @@ fun ProfileFields() {
     var number by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier,
+        modifier = Modifier.padding(top = 20.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.Start
     ) {
         EditTextWithLabelAbove(
             label = "Full name",
             textFieldValue = fullName,
-            onTextFieldValueChanged = { fullName = it},
+            onTextFieldValueChanged = { fullName = it },
         )
 
         EditTextWithLabelAbove(
@@ -125,7 +141,7 @@ fun EditTextWithLabelAbove(
             text = label,
             style = TextStyle(
                 color = Color.LightGray,
-                fontSize = 12.sp
+                fontSize = 14.sp
             )
         )
 
@@ -135,12 +151,38 @@ fun EditTextWithLabelAbove(
             onValueChange = { onTextFieldValueChanged(it) },
             textStyle = TextStyle(
                 color = Color.Black,
-                fontSize = 17.sp,
+                fontSize = 26.sp,
             ),
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
                 focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Gray,
+                unfocusedIndicatorColor = Color.Gray
+            )
+        )
+    }
+}
+
+@Composable
+fun SaveDataButton() {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 40.dp)
+            .background(color = Color.Gray, shape = RoundedCornerShape(8)),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Gray,
+            contentColor = Color.Gray
+        ),
+        onClick = {}
+    ) {
+        Text(
+            text = "Save user data",
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight(500),
+                color = Color.Black
             )
         )
     }

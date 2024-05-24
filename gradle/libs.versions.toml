@@ -16,6 +16,8 @@ compose = "1.6.7"
 compose-plugin = "1.6.2"
 constraintlayoutCompose = "1.0.1"
 constraintlayoutComposeMultiplatform = "0.3.1"
+datastorePreferencesCore = "1.1.1"
+datastoreCore = "1.1.1"
 junit = "4.13.2"
 kamelImage = "0.9.4"
 koinCompose = "1.0.4"
@@ -32,6 +34,8 @@ material3Android = "1.2.1"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
+androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastoreCore" }
+androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferencesCore" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coilNetworkKtor" }
 coil3-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 constraintlayout-compose-multiplatform = { module = "tech.annexflow.compose:constraintlayout-compose-multiplatform", version.ref = "constraintlayoutComposeMultiplatform" }
