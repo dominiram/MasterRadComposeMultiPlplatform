@@ -50,7 +50,7 @@ class ProfileViewModel(private val mongoDB: MongoDB) : ScreenModel {
                     userImage = this.value?.userImage,
                     name = name.takeIf { !it.isNullOrBlank() } ?: this.value?.name,
                     jobTitle = jobTitle.takeIf { !it.isNullOrBlank() } ?: this.value?.jobTitle,
-                    mail = mail.takeIf { !it.isNullOrBlank() } ?: this.value?.mail,
+                    mail = mail,
                     phoneNumber = phoneNumber ?: this.value?.phoneNumber
                 )
             )
