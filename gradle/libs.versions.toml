@@ -31,6 +31,8 @@ voyager = "1.0.0"
 koin = "3.5.3"
 coroutines = "1.8.0"
 material3Android = "1.2.1"
+realm = "1.13.0"
+stately = "2.0.5"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
@@ -67,6 +69,8 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
 precompose-koin = { module = "moe.tlaster:precompose-koin", version.ref = "precomposeKoin" }
 precompose-viewmodel = { module = "moe.tlaster:precompose-viewmodel", version.ref = "precomposeViewmodel" }
+mongodb-realm = { module = "io.realm.kotlin:library-base", version.ref = "realm" }
+stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 
 [plugins]
@@ -74,3 +78,4 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+realm-plugin = { id = "io.realm.kotlin", version.ref = "realm" }

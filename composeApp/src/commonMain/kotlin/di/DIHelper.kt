@@ -1,5 +1,6 @@
 package di
 
+import database.MongoDB
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import repository.ArticleRepository
@@ -9,11 +10,12 @@ import viewModels.ProfileViewModel
 import viewModels.SearchViewModel
 
 fun initKoin() = startKoin {
-    modules(homeViewModelModule)
+    modules(modules)
 }
 
-val homeViewModelModule = module {
+val modules = module {
     single<ArticleRepository> { ArticleRepositoryImpl() }
+    single { MongoDB() }
     factory { HomeViewModel(get()) }
     factory { SearchViewModel(get()) }
     factory { ProfileViewModel(get()) }

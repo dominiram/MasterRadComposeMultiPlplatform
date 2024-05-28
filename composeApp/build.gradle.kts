@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.realm.plugin)
 }
 
 kotlin {
@@ -44,6 +45,9 @@ kotlin {
 
             implementation(libs.coil3.coil.compose)
             implementation(libs.coil.network.ktor)
+
+            implementation(libs.mongodb.realm)
+            implementation(libs.stately.common)
         }
 
         val commonMain by getting {
