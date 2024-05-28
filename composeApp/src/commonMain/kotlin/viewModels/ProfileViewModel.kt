@@ -7,42 +7,61 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import models.ArticleModel
 import models.ProfileModel
-import repository.ArticleRepository
 
 class ProfileViewModel(private val mongoDB: MongoDB) : ScreenModel {
 
-    private var _uiState = MutableStateFlow<ProfileModel?>(null)
-    val uiState: StateFlow<ProfileModel?> = _uiState
+    private var _uiState = MutableStateFlow<UIState?>(null)
+    val uiState: StateFlow<UIState?> = _uiState
 
     init {
         screenModelScope.launch {
             mongoDB.getUserData().collectLatest {
-                _uiState.value = it
+                _uiState.value = UIState(
+                    userImage = it.imageUrl,
+                    name = it.name,
+                    jobTitle = it.jobTitle,
+                    mail = it.mail,
+                    phoneNumber = it.phoneNumber
+                )
             }
         }
     }
 
-    fun saveUserData(
-        name: String,
-        jobTitle: String,
-        mail: String,
-        phoneNumber: Int
-    ) = screenModelScope.launch {
+    fun saveUserData() = screenModelScope.launch {
         mongoDB.saveUserData(ProfileModel().apply {
-            this.name = name
-            this.jobTitle = jobTitle
-            this.mail = mail
-            this.phoneNumber = phoneNumber
+            id = 1
+            _uiState.value?.name?.let { this.name = it }
+            _uiState.value?.jobTitle?.let { this.jobTitle = it }
+            _uiState.value?.mail?.let { this.mail = it }
+            _uiState.value?.phoneNumber?.let { this.phoneNumber = it }
         })
+    }
+
+    fun setFields(
+        name: String? = null,
+        jobTitle: String? = null,
+        mail: String? = null,
+        phoneNumber: Int? = null
+    ) = screenModelScope.launch {
+        _uiState.apply {
+            emit(
+                UIState(
+                    userImage = this.value?.userImage,
+                    name = name.takeIf { !it.isNullOrBlank() } ?: this.value?.name,
+                    jobTitle = jobTitle.takeIf { !it.isNullOrBlank() } ?: this.value?.jobTitle,
+                    mail = mail.takeIf { !it.isNullOrBlank() } ?: this.value?.mail,
+                    phoneNumber = phoneNumber ?: this.value?.phoneNumber
+                )
+            )
+        }
     }
 }
 
 data class UIState(
-    var userName: String?,
-    var userHeadline: String?,
-    var userMail: String?,
-    var userPhoneNumber: Int?,
+    var name: String?,
+    var jobTitle: String?,
+    var mail: String?,
+    var phoneNumber: Int?,
     var userImage: String?,
 )

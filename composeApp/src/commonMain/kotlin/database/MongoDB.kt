@@ -28,9 +28,8 @@ class MongoDB {
     }
 
     fun getUserData(): Flow<ProfileModel> {
-        //TODO: maybe change to query = "id == $0", false
-        return realm?.query<ProfileModel>(query = TRUE_PREDICATE, false)?.asFlow()?.map {
-            if (it.list.size > 0) it.list[0] else ProfileModel()
+        return realm?.query<ProfileModel>(query = "id == 1", false)?.asFlow()?.map {
+            if (it.list.size > 0) it.list[it.list.size - 1] else ProfileModel()
         } ?: flow { ProfileModel() }
     }
 

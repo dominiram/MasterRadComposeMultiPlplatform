@@ -2,11 +2,10 @@ package models
 
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
-import org.mongodb.kbson.ObjectId
 
 class ProfileModel: RealmObject {
     @PrimaryKey
-    var id: ObjectId = ObjectId()
+    var id: Int = 0
     var imageUrl: String = ""
     var name: String = ""
     var jobTitle: String = ""

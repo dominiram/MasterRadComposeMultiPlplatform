@@ -57,15 +57,10 @@ fun ProfileScreenRoot(viewModel: ProfileViewModel) {
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var fullName by remember { mutableStateOf("") }
-        var jobTitle by remember { mutableStateOf("") }
-        var mail by remember { mutableStateOf("") }
-        var number by remember { mutableStateOf(0) }
-
-        fullName = viewModel.uiState.collectAsState().value?.name ?: ""
-        jobTitle = viewModel.uiState.collectAsState().value?.jobTitle ?: ""
-        mail = viewModel.uiState.collectAsState().value?.mail ?: ""
-        number = viewModel.uiState.collectAsState().value?.phoneNumber ?: 0
+        val fullName = viewModel.uiState.collectAsState().value?.name ?: ""
+        val jobTitle = viewModel.uiState.collectAsState().value?.jobTitle ?: ""
+        val mail = viewModel.uiState.collectAsState().value?.mail ?: ""
+        val number = viewModel.uiState.collectAsState().value?.phoneNumber ?: 0
 
         ProfileIcon()
 
@@ -74,13 +69,13 @@ fun ProfileScreenRoot(viewModel: ProfileViewModel) {
             jobTitle = jobTitle,
             mail = mail,
             number = number,
-            onNameChanged = { fullName = it },
-            onJobTitleChanged = { jobTitle = it },
-            onMailChanged = { mail = it },
-            onPhoneNumberChanged = { number = it },
+            onNameChanged = { viewModel.setFields(name = it) },
+            onJobTitleChanged = { viewModel.setFields(jobTitle = it) },
+            onMailChanged = { viewModel.setFields(mail = it) },
+            onPhoneNumberChanged = { viewModel.setFields(phoneNumber = it) },
         )
 
-        SaveDataButton { viewModel.saveUserData(fullName, jobTitle, mail, number) }
+        SaveDataButton { viewModel.saveUserData() }
     }
 }
 
