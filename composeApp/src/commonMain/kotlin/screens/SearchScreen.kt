@@ -73,7 +73,7 @@ class SearchScreen : Screen {
             horizontalAlignment = Alignment.Start
         ) {
             TitleContainer()
-            SearchContainer() { searchText -> viewModel.getArticles(searchText) }
+            SearchContainer { searchText -> viewModel.getArticles(searchText) }
             ArticlesPager(articles)
         }
     }

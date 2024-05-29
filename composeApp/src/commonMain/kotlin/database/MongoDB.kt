@@ -37,7 +37,7 @@ class MongoDB {
             runCatching {
                 query<ProfileModel>("id == 1", false).first().find()?.let {
                     findLatest(it)?.let { model ->
-                        model.imageUrl = profileModel.imageUrl
+                        model.userImage = profileModel.userImage
                         model.name = profileModel.name
                         model.jobTitle = profileModel.jobTitle
                         model.mail = profileModel.mail

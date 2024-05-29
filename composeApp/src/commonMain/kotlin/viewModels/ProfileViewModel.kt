@@ -18,7 +18,7 @@ class ProfileViewModel(private val mongoDB: MongoDB) : ScreenModel {
         screenModelScope.launch {
             mongoDB.getUserData().collectLatest {
                 _uiState.value = UIState(
-                    userImage = it.imageUrl,
+                    userImage = it.userImage,
                     name = it.name,
                     jobTitle = it.jobTitle,
                     mail = it.mail,
@@ -63,5 +63,32 @@ data class UIState(
     var jobTitle: String?,
     var mail: String?,
     var phoneNumber: Int?,
-    var userImage: String?,
-)
+    var userImage: ByteArray?,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as UIState
+
+        if (name != other.name) return false
+        if (jobTitle != other.jobTitle) return false
+        if (mail != other.mail) return false
+        if (phoneNumber != other.phoneNumber) return false
+        if (userImage != null) {
+            if (other.userImage == null) return false
+            if (!userImage.contentEquals(other.userImage)) return false
+        } else if (other.userImage != null) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name?.hashCode() ?: 0
+        result = 31 * result + (jobTitle?.hashCode() ?: 0)
+        result = 31 * result + (mail?.hashCode() ?: 0)
+        result = 31 * result + (phoneNumber ?: 0)
+        result = 31 * result + (userImage?.contentHashCode() ?: 0)
+        return result
+    }
+}

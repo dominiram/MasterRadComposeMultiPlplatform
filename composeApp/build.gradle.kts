@@ -48,23 +48,15 @@ kotlin {
 
             implementation(libs.mongodb.realm)
             implementation(libs.stately.common)
-        }
 
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.constraintlayout.compose.multiplatform)
-                implementation(libs.kamel.image)
-                implementation(libs.ktor.client.core)
+            implementation(libs.constraintlayout.compose.multiplatform)
+            implementation(libs.kamel.image)
+            implementation(libs.ktor.client.core)
 
-                implementation(libs.koin.core.v343)
-                implementation(libs.koin.compose)
-
-                implementation(libs.precompose)
-                implementation(libs.precompose.viewmodel)
-                implementation(libs.precompose.koin)
-                implementation(libs.androidx.datastore.preferences.core)
-                implementation(libs.androidx.datastore.core)
-            }
+            implementation(libs.koin.core.v343)
+            implementation(libs.koin.compose)
+            implementation(libs.androidx.datastore.preferences.core)
+            implementation(libs.androidx.datastore.core)
         }
 
         androidMain.dependencies {
@@ -116,7 +108,3 @@ android {
         debugImplementation(libs.compose.ui.tooling)
     }
 }
-dependencies {
-    implementation(libs.androidx.material3.android)
-}
-
