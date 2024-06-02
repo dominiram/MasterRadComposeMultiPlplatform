@@ -1,6 +1,7 @@
 package nonShared
 
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -12,7 +13,7 @@ actual class ImagePicker(private val activity: ComponentActivity) {
     @Composable
     actual fun RegisterPicker(onImagePicked: (ByteArray) -> Unit) {
         getContent =
-            activity.registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
                 uri?.let {
                     activity.contentResolver.openInputStream(uri)?.use {
                         onImagePicked(it.readBytes())
