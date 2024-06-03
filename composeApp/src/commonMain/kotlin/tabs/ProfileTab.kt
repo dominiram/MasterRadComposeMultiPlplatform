@@ -9,13 +9,15 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
+import nonShared.ImagePicker
 import screens.ProfileScreen
 import screens.SearchScreen
 
-object ProfileTab : Tab {
+class ProfileTab(private val imagePicker: ImagePicker) : Tab {
+
     @Composable
     override fun Content() {
-        Navigator(screen = ProfileScreen()) { navigator ->
+        Navigator(screen = ProfileScreen(imagePicker)) { navigator ->
             SlideTransition(navigator = navigator)
         }
     }

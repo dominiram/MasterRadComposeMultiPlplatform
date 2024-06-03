@@ -33,31 +33,35 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import masterradcomposemultiplatform.composeapp.generated.resources.Res
 import masterradcomposemultiplatform.composeapp.generated.resources.compose_multiplatform
+import nonShared.ImagePicker
+import nonShared.rememberBitmapFromBytes
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import viewModels.ProfileViewModel
 
-class ProfileScreen : Screen {
+class ProfileScreen(private val imagePicker: ImagePicker) : Screen {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<ProfileViewModel>()
-        ProfileScreenRoot(viewModel)
+        imagePicker.RegisterPicker { imageBytes -> viewModel.saveUserImage(imageBytes) }
+        ProfileScreenRoot(viewModel) { imagePicker.ShowImagePicker() }
     }
 }
 
 @Composable
-fun ProfileScreenRoot(viewModel: ProfileViewModel) {
+fun ProfileScreenRoot(viewModel: ProfileViewModel, onImagePicked: () -> Unit) {
     Column(
         modifier = Modifier.padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val photoBytes = viewModel.uiState.collectAsState().value?.userImage
         val fullName = viewModel.uiState.collectAsState().value?.name ?: ""
         val jobTitle = viewModel.uiState.collectAsState().value?.jobTitle ?: ""
         val mail = viewModel.uiState.collectAsState().value?.mail ?: ""
         val number = viewModel.uiState.collectAsState().value?.phoneNumber ?: 0
 
-        ProfileIcon()
+        ProfileIcon(photoBytes) { onImagePicked() }
 
         ProfileFields(
             fullName = fullName,
@@ -76,12 +80,18 @@ fun ProfileScreenRoot(viewModel: ProfileViewModel) {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ProfileIcon() {
+fun ProfileIcon(photoBytes: ByteArray?, openImagePicker: () -> Unit) {
     Box(
         modifier = Modifier.padding(top = 70.dp).height(160.dp).width(160.dp)
     ) {
-        //TODO: image url / image from storage instead of Res.drawable...
-        Image(
+
+        rememberBitmapFromBytes(photoBytes)?.let {
+            Image(
+                modifier = Modifier.height(200.dp).width(200.dp),
+                bitmap = it,
+                contentDescription = null
+            )
+        } ?: Image(
             modifier = Modifier.height(200.dp).width(200.dp),
             painter = painterResource(Res.drawable.compose_multiplatform),
             contentDescription = null
@@ -92,7 +102,7 @@ fun ProfileIcon() {
             shape = CircleShape,
             contentColor = Color.Gray,
             containerColor = Color.White,
-            onClick = {},
+            onClick = { openImagePicker() },
         ) {
             Icon(
                 modifier = Modifier,

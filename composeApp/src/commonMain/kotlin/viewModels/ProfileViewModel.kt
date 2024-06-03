@@ -31,6 +31,7 @@ class ProfileViewModel(private val mongoDB: MongoDB) : ScreenModel {
     fun saveUserData() = screenModelScope.launch {
         mongoDB.saveUserData(ProfileModel().apply {
             id = 1
+            _uiState.value?.userImage?.let { this.userImage = it }
             _uiState.value?.name?.let { this.name = it }
             _uiState.value?.jobTitle?.let { this.jobTitle = it }
             _uiState.value?.mail?.let { this.mail = it }
@@ -50,8 +51,22 @@ class ProfileViewModel(private val mongoDB: MongoDB) : ScreenModel {
                     userImage = this.value?.userImage,
                     name = name.takeIf { !it.isNullOrBlank() } ?: this.value?.name,
                     jobTitle = jobTitle.takeIf { !it.isNullOrBlank() } ?: this.value?.jobTitle,
-                    mail = mail,
+                    mail = mail.takeIf { !it.isNullOrBlank() } ?: this.value?.mail,
                     phoneNumber = phoneNumber ?: this.value?.phoneNumber
+                )
+            )
+        }
+    }
+
+    fun saveUserImage(imageBytes: ByteArray) = screenModelScope.launch {
+        _uiState.apply {
+            emit(
+                UIState(
+                    userImage = imageBytes,
+                    name = this.value?.name,
+                    jobTitle = this.value?.jobTitle,
+                    mail = this.value?. mail,
+                    phoneNumber = this.value?.phoneNumber
                 )
             )
         }
