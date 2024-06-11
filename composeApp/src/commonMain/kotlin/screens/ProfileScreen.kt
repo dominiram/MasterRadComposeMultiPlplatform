@@ -2,6 +2,8 @@ package screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -22,10 +25,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -100,8 +106,9 @@ fun ProfileIcon(photoBytes: ByteArray?, openImagePicker: () -> Unit) {
 
         rememberBitmapFromBytes(photoBytes)?.let {
             Image(
-                modifier = Modifier.height(200.dp).width(200.dp),
+                modifier = Modifier.height(200.dp).width(200.dp).clip(shape = CircleShape),
                 bitmap = it,
+                contentScale = ContentScale.FillBounds,
                 contentDescription = null
             )
         } ?: Image(
@@ -206,18 +213,30 @@ fun EditTextWithLabelAbove(
 
 @Composable
 fun SaveDataButton(saveUserData: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val rippleColor = Color.White
+
+
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 40.dp)
-            .background(color = Color.Gray, shape = RoundedCornerShape(8)),
+            .background(color = Color.Gray, shape = RoundedCornerShape(8))
+            .indication(
+                interactionSource = interactionSource,
+                indication = rememberRipple(
+                    color = rippleColor
+                )
+            ),
+        onClick = { saveUserData() },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Gray,
-            contentColor = Color.Gray
+            contentColor = Color.Gray,
         ),
-        onClick = { saveUserData() }
+        interactionSource = interactionSource,
     ) {
         Text(
+            modifier = Modifier.background(color = Color.Transparent),
             text = "Save user data",
             style = TextStyle(
                 fontSize = 20.sp,
