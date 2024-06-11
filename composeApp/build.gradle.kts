@@ -57,6 +57,9 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.androidx.datastore.core)
+
+            implementation(libs.peekaboo.ui)
+            implementation(libs.peekaboo.image.picker)
         }
 
         androidMain.dependencies {

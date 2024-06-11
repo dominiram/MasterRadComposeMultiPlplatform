@@ -16,7 +16,6 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import di.initKoin
-import nonShared.ImagePicker
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import tabs.HomeTab
 import tabs.ProfileTab
@@ -24,7 +23,7 @@ import tabs.SearchTab
 
 @Composable
 @Preview
-fun App(imagePicker: ImagePicker) {
+fun App() {
     initKoin()
 
     MaterialTheme {
@@ -39,7 +38,7 @@ fun App(imagePicker: ImagePicker) {
                     ) {
                         TabNavigationItem(HomeTab)
                         TabNavigationItem(SearchTab)
-                        TabNavigationItem(ProfileTab(imagePicker))
+                        TabNavigationItem(ProfileTab)
                     }
                 },
                 content = { CurrentTab() }

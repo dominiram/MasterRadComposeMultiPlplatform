@@ -22,6 +22,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,20 +32,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
+import com.preat.peekaboo.image.picker.SelectionMode
+import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import masterradcomposemultiplatform.composeapp.generated.resources.Res
 import masterradcomposemultiplatform.composeapp.generated.resources.compose_multiplatform
-import nonShared.ImagePicker
 import nonShared.rememberBitmapFromBytes
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import viewModels.ProfileViewModel
 
-class ProfileScreen(private val imagePicker: ImagePicker) : Screen {
+class ProfileScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<ProfileViewModel>()
-        imagePicker.RegisterPicker { imageBytes -> viewModel.saveUserImage(imageBytes) }
-        ProfileScreenRoot(viewModel) { imagePicker.ShowImagePicker() }
+        val scope = rememberCoroutineScope()
+
+        val singleImagePicker = rememberImagePickerLauncher(
+            selectionMode = SelectionMode.Single,
+            scope = scope,
+            onResult = { byteArrays ->
+                byteArrays.firstOrNull()?.let { imageBytes ->
+                    viewModel.saveUserImage(imageBytes)
+                }
+            }
+        )
+
+        ProfileScreenRoot(viewModel) { singleImagePicker.launch() }
     }
 }
 
