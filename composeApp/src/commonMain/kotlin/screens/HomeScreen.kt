@@ -2,6 +2,7 @@ package screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,9 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,20 +43,35 @@ class HomeScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.current
         val viewModel = getScreenModel<HomeViewModel>()
-        HomeScreenRoot(navigator, viewModel)
+        val isLoading = viewModel.isLoading
+        val articles = viewModel.articles.collectAsState().value
+
+        if (isLoading.value) LoadingScreen()
+        else HomeScreenRoot(navigator, articles)
     }
 
 }
 
 @Composable
-fun HomeScreenRoot(navigator: Navigator?, viewModel: HomeViewModel) {
+fun LoadingScreen() {
+    Box(modifier = Modifier.fillMaxSize().background(color = Color.Black)) {
+        CircularProgressIndicator(
+            modifier = Modifier.width(64.dp).align(Alignment.Center),
+            color = Color.Black,
+            trackColor = Color.White
+        )
+    }
+}
+
+@Composable
+fun HomeScreenRoot(navigator: Navigator?, articles: List<ArticleModel>) {
     Column(
         modifier = Modifier.fillMaxSize().background(color = Color.White),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
     ) {
         HomeScreenImage(imageUrl = "https://images.unsplash.com/photo-1656106534627-0fef76c8b042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=450&h=420")
         BreakingNewsTitle()
-        BreakingNewsList(viewModel.getArticles())
+        BreakingNewsList(articles)
     }
 }
 
