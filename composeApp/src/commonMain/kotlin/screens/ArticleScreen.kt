@@ -1,6 +1,7 @@
 package screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,51 +31,62 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import models.ArticleModel
+import utils.AsyncImage
 import viewModels.ArticleViewModel
 import viewModels.HomeViewModel
 
-data class ArticleScreen(private val articleId: Int): Screen {
+data class ArticleScreen(private val articleId: Int) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.current
         val viewModel = getScreenModel<ArticleViewModel>()
         val article = viewModel.getArticle(articleId)
-        ArticleScreenRoot(article)
+        ArticleScreenRoot(navigator, article)
     }
 
 }
 
 @Composable
-fun ArticleScreenRoot(article: ArticleModel) {
+fun ArticleScreenRoot(navigator: Navigator?, article: ArticleModel) {
     Box(modifier = Modifier.fillMaxSize()) {
-        ArticleImageScreen(article.imageUrl)
+        ArticleImageScreen(article = article, navigateBack = { navigator?.pop() })
         ArticleBottomInfoModal(modifier = Modifier.align(Alignment.BottomCenter))
     }
 }
 
 @Composable
-fun ArticleImageScreen(imageUrl: String) {
+fun ArticleImageScreen(article: ArticleModel, navigateBack: () -> Unit) {
     ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
         val (image, imageText, backArrow) = createRefs()
 
         KamelImage(
             modifier = Modifier
-                .padding(top = 50.dp)
-                .height(400.dp)
+                .background(color = Color.Black)
+                .height(460.dp)
                 .fillMaxWidth()
-                .constrainAs(image) {},
-            resource = asyncPainterResource(imageUrl),
+                .constrainAs(image) {
+                    top.linkTo(parent.top)
+                },
+            resource = asyncPainterResource(article.coverImageUrl),
             contentDescription = null
         )
 
         Icon(
-            modifier = Modifier.height(24.dp).width(24.dp).constrainAs(backArrow) {
-                top.linkTo(image.top)
-                start.linkTo(image.start)
-            },
+            modifier = Modifier
+                .padding(top = 16.dp, start = 16.dp)
+                .height(24.dp)
+                .width(24.dp)
+                .clickable {
+                    navigateBack()
+                }
+                .constrainAs(backArrow) {
+                    top.linkTo(image.top)
+                    start.linkTo(image.start)
+                },
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = "",
             tint = Color.White
@@ -81,7 +94,7 @@ fun ArticleImageScreen(imageUrl: String) {
 
         Column(
             modifier = Modifier
-                .padding(bottom = 32.dp, start = 16.dp)
+                .padding(bottom = 32.dp, start = 16.dp, end = 16.dp)
                 .constrainAs(imageText) {
                     bottom.linkTo(image.bottom)
                     start.linkTo(parent.start)
@@ -105,7 +118,7 @@ fun ArticleImageScreen(imageUrl: String) {
 
             Text(
                 modifier = Modifier.padding(4.dp),
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras molestie maximus",
+                text = article.title,
                 style = TextStyle(
                     fontSize = 24.sp,
                     color = Color.White,
@@ -115,7 +128,7 @@ fun ArticleImageScreen(imageUrl: String) {
 
             Text(
                 modifier = Modifier.padding(4.dp),
-                text = "Learn more",
+                text = article.subtitle,
                 style = TextStyle(
                     fontSize = 13.sp,
                     color = Color.White
@@ -128,6 +141,6 @@ fun ArticleImageScreen(imageUrl: String) {
 @Composable
 fun ArticleBottomInfoModal(modifier: Modifier) {
     Column(modifier = modifier.clip(shape = RoundedCornerShape(16.dp))) {
-        Row {  }
+        Row { }
     }
 }

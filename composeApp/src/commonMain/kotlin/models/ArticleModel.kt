@@ -10,5 +10,6 @@ data class ArticleModel(
     val authorImageUrl: String,
     val category: String,
     val imageUrl: String,
+    val coverImageUrl: String,
     val createdAt: String,
 )

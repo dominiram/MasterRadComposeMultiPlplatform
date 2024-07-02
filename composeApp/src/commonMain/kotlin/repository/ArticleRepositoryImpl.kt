@@ -26,6 +26,7 @@ class ArticleRepositoryImpl : ArticleRepository {
             category = "Politics",
             views = 1204,
             imageUrl = "https://images.unsplash.com/photo-1656106534627-0fef76c8b042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=[width]&h=[height]",
+            coverImageUrl = "https://images.unsplash.com/photo-1656106534627-0fef76c8b042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=430&h=480",
             createdAt = "5 hours ago",
         ),
         ArticleModel(
@@ -38,6 +39,7 @@ class ArticleRepositoryImpl : ArticleRepository {
             category = "Politics",
             views = 1204,
             imageUrl = "https://images.unsplash.com/photo-1574280363402-2f672940b871?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=[width]&h=[height]",
+            coverImageUrl = "https://images.unsplash.com/photo-1574280363402-2f672940b871?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=430&h=480",
             createdAt = "6 hours ago",
         ),
         ArticleModel(
@@ -50,6 +52,7 @@ class ArticleRepositoryImpl : ArticleRepository {
             category = "Politics",
             views = 1204,
             imageUrl = "https://images.unsplash.com/photo-1616832880334-b1004d9808da?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=[width]&h=[height]",
+            coverImageUrl = "https://images.unsplash.com/photo-1616832880334-b1004d9808da?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=430&h=480",
             createdAt = "8 hours ago",
         ),
         ArticleModel(
@@ -62,6 +65,7 @@ class ArticleRepositoryImpl : ArticleRepository {
             category = "Politics",
             views = 1204,
             imageUrl = "https://images.unsplash.com/photo-1653587416464-8a99cc74d192?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=[width]&h=[height]",
+            coverImageUrl = "https://images.unsplash.com/photo-1653587416464-8a99cc74d192?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=430&h=480",
             createdAt = "12 hours ago",
         ),
         ArticleModel(
@@ -74,6 +78,7 @@ class ArticleRepositoryImpl : ArticleRepository {
             category = "Politics",
             views = 1204,
             imageUrl = "https://images.unsplash.com/photo-1658330056737-0fd4bda0e4c1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=[width]&h=[height]",
+            coverImageUrl = "https://images.unsplash.com/photo-1658330056737-0fd4bda0e4c1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=scale&w=430&h=480",
             createdAt = "20 hours ago",
         ),
     )

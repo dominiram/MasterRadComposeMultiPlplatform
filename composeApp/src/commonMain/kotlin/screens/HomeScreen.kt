@@ -1,6 +1,7 @@
 package screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,15 +70,25 @@ fun HomeScreenRoot(navigator: Navigator?, articles: List<ArticleModel>) {
         modifier = Modifier.fillMaxSize().background(color = Color.White),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
     ) {
-        HomeScreenImage(imageUrl = "https://images.unsplash.com/photo-1656106534627-0fef76c8b042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=450&h=420")
+        HomeScreenImage(
+            imageUrl = "https://images.unsplash.com/photo-1656106534627-0fef76c8b042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=450&h=420",
+            navigateToFirstArticle = { navigator?.push(ArticleScreen(1)) }
+        )
         BreakingNewsTitle()
-        BreakingNewsList(articles)
+
+        BreakingNewsList(
+            articles = articles,
+            navigateToArticle = { id -> navigator?.push(ArticleScreen(id)) }
+        )
     }
 }
 
 @Composable
-fun HomeScreenImage(imageUrl: String) {
-    ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+fun HomeScreenImage(
+    imageUrl: String,
+    navigateToFirstArticle: () -> Unit
+) {
+    ConstraintLayout(modifier = Modifier.fillMaxWidth().clickable { navigateToFirstArticle() }) {
         val (image, imageText) = createRefs()
 
         KamelImage(
@@ -175,7 +186,7 @@ fun BreakingNewsTitle() {
 }
 
 @Composable
-fun BreakingNewsList(articles: List<ArticleModel>) {
+fun BreakingNewsList(articles: List<ArticleModel>, navigateToArticle: (Int) -> Unit) {
     LazyRow(
         modifier = Modifier.padding(horizontal = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -184,15 +195,16 @@ fun BreakingNewsList(articles: List<ArticleModel>) {
             items = articles,
             key = { it.id }
         ) { article ->
-            ArticleRowItem(article)
+            ArticleRowItem(article, navigateToArticle)
         }
     }
 }
 
 @Composable
-fun ArticleRowItem(articleModel: ArticleModel) {
+fun ArticleRowItem(articleModel: ArticleModel, navigateToArticle: (Int) -> Unit) {
     Column(
-        modifier = Modifier.width(200.dp).background(color = Color.White),
+        modifier = Modifier.width(200.dp).background(color = Color.White)
+            .clickable { navigateToArticle(articleModel.id) },
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top)
     ) {
         RoundedCornerAsyncImage(
