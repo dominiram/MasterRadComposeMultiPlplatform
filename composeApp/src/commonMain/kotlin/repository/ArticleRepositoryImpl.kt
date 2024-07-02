@@ -12,6 +12,9 @@ class ArticleRepositoryImpl : ArticleRepository {
         })
     }
 
+    override fun getArticle(articleId: Int): ArticleModel =
+        articles.find { it.id == articleId } ?: articles[0]
+
     private val articles = arrayListOf(
         ArticleModel(
             id = 1,

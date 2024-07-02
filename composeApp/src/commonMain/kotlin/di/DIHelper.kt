@@ -5,6 +5,7 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import repository.ArticleRepository
 import repository.ArticleRepositoryImpl
+import viewModels.ArticleViewModel
 import viewModels.HomeViewModel
 import viewModels.ProfileViewModel
 import viewModels.SearchViewModel
@@ -19,4 +20,5 @@ val modules = module {
     factory { HomeViewModel(get()) }
     factory { SearchViewModel(get()) }
     factory { ProfileViewModel(get()) }
+    factory { ArticleViewModel(get()) }
 }

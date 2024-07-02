@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,13 +26,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import models.ArticleModel
+import viewModels.ArticleViewModel
+import viewModels.HomeViewModel
+
+data class ArticleScreen(private val articleId: Int): Screen {
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.current
+        val viewModel = getScreenModel<ArticleViewModel>()
+        val article = viewModel.getArticle(articleId)
+        ArticleScreenRoot(article)
+    }
+
+}
 
 @Composable
-fun ArticleScreenRoot(imageUrl: String) {
+fun ArticleScreenRoot(article: ArticleModel) {
     Box(modifier = Modifier.fillMaxSize()) {
-        ArticleImageScreen(imageUrl)
+        ArticleImageScreen(article.imageUrl)
         ArticleBottomInfoModal(modifier = Modifier.align(Alignment.BottomCenter))
     }
 }
