@@ -47,9 +47,10 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import viewModels.ProfileViewModel
 
-class ProfileScreen : Screen {
+class ProfileScreen(private val showNavigationBar: () -> Unit) : Screen {
     @Composable
     override fun Content() {
+        showNavigationBar()
         val viewModel = getScreenModel<ProfileViewModel>()
         val scope = rememberCoroutineScope()
 

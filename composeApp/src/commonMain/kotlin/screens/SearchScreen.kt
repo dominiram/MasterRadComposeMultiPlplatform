@@ -2,6 +2,7 @@ package screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
 import kotlinx.coroutines.launch
 import masterradcomposemultiplatform.composeapp.generated.resources.Res
 import masterradcomposemultiplatform.composeapp.generated.resources.ic_schedule
@@ -61,10 +63,15 @@ import org.jetbrains.compose.resources.painterResource
 import utils.RoundedCornerAsyncImage
 import viewModels.SearchViewModel
 
-class SearchScreen : Screen {
+class SearchScreen(
+    private val showBottomNavBar: () -> Unit,
+    private val hideBottomNavBar: () -> Unit
+) : Screen {
     @Composable
     override fun Content() {
+        showBottomNavBar()
         val viewModel = getScreenModel<SearchViewModel>()
+        val navigator = LocalNavigator.current
         val articles by viewModel.articles.collectAsState()
 
         Column(
@@ -74,7 +81,12 @@ class SearchScreen : Screen {
         ) {
             TitleContainer()
             SearchContainer { searchText -> viewModel.getArticles(searchText) }
-            ArticlesPager(articles)
+            ArticlesPager(
+                articles = articles,
+                openArticleScreen = { id ->
+                    navigator?.push(ArticleScreen(id, hideBottomNavBar))
+                }
+            )
         }
     }
 }
@@ -165,7 +177,7 @@ fun SearchContainer(doSearch: (String) -> Unit) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ArticlesPager(articles: List<ArticleModel>) {
+fun ArticlesPager(articles: List<ArticleModel>, openArticleScreen: (Int) -> Unit) {
     val pagerState = rememberPagerState(initialPage = 0) { 5 }
     var selectedTab by remember { mutableIntStateOf(pagerState.currentPage) }
     val coroutineScope = rememberCoroutineScope()
@@ -208,13 +220,13 @@ fun ArticlesPager(articles: List<ArticleModel>) {
         }
 
         HorizontalPager(state = pagerState) {
-            TabPage(articles)
+            TabPage(articles = articles, openArticleScreen = openArticleScreen)
         }
     }
 }
 
 @Composable
-fun TabPage(articles: List<ArticleModel>) {
+fun TabPage(articles: List<ArticleModel>, openArticleScreen: (Int) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
@@ -223,16 +235,16 @@ fun TabPage(articles: List<ArticleModel>) {
             items = articles,
             key = { it.id }
         ) {
-            ArticleColumnItem(it)
+            ArticleColumnItem(article = it, openArticleScreen = openArticleScreen)
         }
     }
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ArticleColumnItem(article: ArticleModel) {
+fun ArticleColumnItem(article: ArticleModel, openArticleScreen: (Int) -> Unit) {
     Row(
-        modifier = Modifier,
+        modifier = Modifier.clickable { openArticleScreen(article.id) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         RoundedCornerAsyncImage(

@@ -8,6 +8,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -25,21 +29,38 @@ import tabs.SearchTab
 @Preview
 fun App() {
     initKoin()
+    var shouldShowBottomNav by remember { mutableStateOf(true) }
 
     MaterialTheme {
         TabNavigator(
-            tab = HomeTab
+            tab = HomeTab(
+                showBottomNavBar = { shouldShowBottomNav = true },
+                hideBottomNavBar = { shouldShowBottomNav = false }
+            )
         ) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = {
-                    BottomNavigation(
-                        backgroundColor = Color(0xFF3F54BE)
-                    ) {
-                        TabNavigationItem(HomeTab)
-                        TabNavigationItem(SearchTab)
-                        TabNavigationItem(ProfileTab)
-                    }
+                    if (shouldShowBottomNav)
+                        BottomNavigation(
+                            backgroundColor = Color(0xFF3F54BE)
+                        ) {
+                            TabNavigationItem(
+                                HomeTab(
+                                    showBottomNavBar = { shouldShowBottomNav = true },
+                                    hideBottomNavBar = { shouldShowBottomNav = false }
+                                )
+                            )
+                            TabNavigationItem(
+                                SearchTab(
+                                    showBottomNavBar = { shouldShowBottomNav = true },
+                                    hideBottomNavBar = { shouldShowBottomNav = false }
+                                )
+                            )
+                            TabNavigationItem(ProfileTab(showBottomNavBar = {
+                                shouldShowBottomNav = true
+                            }))
+                        }
                 },
                 content = { CurrentTab() }
             )

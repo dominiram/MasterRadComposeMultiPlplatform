@@ -10,10 +10,18 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
 import screens.HomeScreen
 
-object HomeTab : Tab {
+data class HomeTab(
+    private val hideBottomNavBar: () -> Unit,
+    private val showBottomNavBar: () -> Unit,
+) : Tab {
     @Composable
     override fun Content() {
-        Navigator(screen = HomeScreen()) { navigator ->
+        Navigator(
+            screen = HomeScreen(
+                showBottomNavBar = showBottomNavBar,
+                hideBottomNavBar = hideBottomNavBar
+            )
+        ) { navigator ->
             SlideTransition(navigator = navigator)
         }
     }

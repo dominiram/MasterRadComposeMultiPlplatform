@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,25 +33,28 @@ import cafe.adriel.voyager.navigator.Navigator
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import models.ArticleModel
-import utils.AsyncImage
 import viewModels.ArticleViewModel
-import viewModels.HomeViewModel
 
-data class ArticleScreen(private val articleId: Int) : Screen {
+data class ArticleScreen(private val articleId: Int, private val hideBottomNavBar: () -> Unit) :
+    Screen {
     @Composable
     override fun Content() {
+        hideBottomNavBar()
         val navigator = LocalNavigator.current
         val viewModel = getScreenModel<ArticleViewModel>()
         val article = viewModel.getArticle(articleId)
         ArticleScreenRoot(navigator, article)
     }
-
 }
 
 @Composable
 fun ArticleScreenRoot(navigator: Navigator?, article: ArticleModel) {
     Box(modifier = Modifier.fillMaxSize()) {
-        ArticleImageScreen(article = article, navigateBack = { navigator?.pop() })
+        ArticleImageScreen(
+            article = article,
+            navigateBack = { navigator?.pop() }
+        )
+
         ArticleBottomInfoModal(modifier = Modifier.align(Alignment.BottomCenter))
     }
 }

@@ -39,16 +39,20 @@ import models.ArticleModel
 import utils.RoundedCornerAsyncImage
 import viewModels.HomeViewModel
 
-class HomeScreen : Screen {
+data class HomeScreen(
+    private val showBottomNavBar: () -> Unit,
+    private val hideBottomNavBar: () -> Unit
+) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.current
         val viewModel = getScreenModel<HomeViewModel>()
         val isLoading = viewModel.isLoading
         val articles = viewModel.articles.collectAsState().value
+        showBottomNavBar()
 
         if (isLoading.value) LoadingScreen()
-        else HomeScreenRoot(navigator, articles)
+        else HomeScreenRoot(navigator, articles, hideBottomNavBar)
     }
 
 }
@@ -65,20 +69,28 @@ fun LoadingScreen() {
 }
 
 @Composable
-fun HomeScreenRoot(navigator: Navigator?, articles: List<ArticleModel>) {
+fun HomeScreenRoot(
+    navigator: Navigator?,
+    articles: List<ArticleModel>,
+    hideBottomNavBar: () -> Unit,
+) {
     Column(
         modifier = Modifier.fillMaxSize().background(color = Color.White),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
     ) {
         HomeScreenImage(
             imageUrl = "https://images.unsplash.com/photo-1656106534627-0fef76c8b042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=450&h=420",
-            navigateToFirstArticle = { navigator?.push(ArticleScreen(1)) }
+            navigateToFirstArticle = {
+                navigator?.push(ArticleScreen(1, hideBottomNavBar))
+            }
         )
         BreakingNewsTitle()
 
         BreakingNewsList(
             articles = articles,
-            navigateToArticle = { id -> navigator?.push(ArticleScreen(id)) }
+            navigateToArticle = { id ->
+                navigator?.push(ArticleScreen(id, hideBottomNavBar))
+            }
         )
     }
 }

@@ -10,10 +10,13 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
 import screens.SearchScreen
 
-object SearchTab : Tab {
+data class SearchTab(
+    private val showBottomNavBar: () -> Unit,
+    private val hideBottomNavBar: () -> Unit
+) : Tab {
     @Composable
     override fun Content() {
-        Navigator(screen = SearchScreen()) { navigator ->
+        Navigator(screen = SearchScreen(showBottomNavBar, hideBottomNavBar)) { navigator ->
             SlideTransition(navigator = navigator)
         }
     }

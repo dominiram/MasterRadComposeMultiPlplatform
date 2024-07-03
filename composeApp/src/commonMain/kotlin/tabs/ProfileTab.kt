@@ -10,11 +10,11 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
 import screens.ProfileScreen
 
-object ProfileTab : Tab {
+data class ProfileTab(private val showBottomNavBar: () -> Unit) : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = ProfileScreen()) { navigator ->
+        Navigator(screen = ProfileScreen(showBottomNavBar)) { navigator ->
             SlideTransition(navigator = navigator)
         }
     }
