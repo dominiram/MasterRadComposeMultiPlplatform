@@ -34,7 +34,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import masterradcomposemultiplatform.composeapp.generated.resources.Res
-import masterradcomposemultiplatform.composeapp.generated.resources.ic_schedule
+import masterradcomposemultiplatform.composeapp.generated.resources.ic_stopwatch
 import masterradcomposemultiplatform.composeapp.generated.resources.ic_visibility
 import models.ArticleModel
 import org.jetbrains.compose.resources.DrawableResource
@@ -110,7 +110,7 @@ fun ArticleImageScreen(article: ArticleModel, navigateBack: () -> Unit) {
 
         Column(
             modifier = Modifier
-                .padding(bottom = 32.dp, start = 16.dp, end = 16.dp)
+                .padding(bottom = 72.dp, start = 16.dp, end = 16.dp)
                 .constrainAs(imageText) {
                     bottom.linkTo(image.bottom)
                     start.linkTo(parent.start)
@@ -159,13 +159,12 @@ fun ArticleImageScreen(article: ArticleModel, navigateBack: () -> Unit) {
 fun ArticleBottomInfoModal(modifier: Modifier, article: ArticleModel) {
     Box(modifier = modifier) {
         Column(
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
+            modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
 
                 ArticleInfoPill(
@@ -179,7 +178,7 @@ fun ArticleBottomInfoModal(modifier: Modifier, article: ArticleModel) {
 
                 ArticleInfoPill(
                     imageUrl = null,
-                    icon = Res.drawable.ic_schedule,
+                    icon = Res.drawable.ic_stopwatch,
                     text = article.createdAt,
                     backgroundColor = Color(0xFFECECEC),
                     textColor = Color.Black,
@@ -233,7 +232,7 @@ fun ArticleInfoPill(
         modifier = Modifier.background(
             color = backgroundColor,
             shape = RoundedCornerShape(24.dp)
-        ).padding(vertical = 12.dp, horizontal = 8.dp)
+        ).padding(vertical = 8.dp, horizontal = 12.dp)
     ) {
         imageUrl?.let { url ->
             KamelImage(
