@@ -62,7 +62,15 @@ fun ArticleScreenRoot(navigator: Navigator?, article: ArticleModel) {
             navigateBack = { navigator?.pop() }
         )
 
-        ArticleBottomInfoModal(modifier = Modifier.align(Alignment.BottomCenter), article)
+        ArticleBottomInfoModal(
+            modifier = Modifier
+                .height(450.dp)
+                .background(
+                    color = Color.White,
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                )
+                .align(Alignment.BottomCenter), article
+        )
     }
 }
 
@@ -136,7 +144,7 @@ fun ArticleImageScreen(article: ArticleModel, navigateBack: () -> Unit) {
 
             Text(
                 modifier = Modifier.padding(4.dp),
-                text = article.body,
+                text = article.subtitle,
                 style = TextStyle(
                     fontSize = 13.sp,
                     color = Color.White
@@ -149,45 +157,64 @@ fun ArticleImageScreen(article: ArticleModel, navigateBack: () -> Unit) {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ArticleBottomInfoModal(modifier: Modifier, article: ArticleModel) {
-    Column(
-        modifier = modifier.clip(shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-    ) {
-        Row(modifier = Modifier) {
+    Box(modifier = modifier) {
+        Column(
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
 
-            ArticleInfoPill(
-                imageUrl = article.authorImageUrl,
-                icon = null,
-                text = article.author,
-                backgroundColor = Color.Black,
-                textColor = Color.White
+                ArticleInfoPill(
+                    imageUrl = article.authorImageUrl,
+                    icon = null,
+                    text = article.author,
+                    backgroundColor = Color.Black,
+                    textColor = Color.White,
+                    iconColor = Color.Gray
+                )
+
+                ArticleInfoPill(
+                    imageUrl = null,
+                    icon = Res.drawable.ic_schedule,
+                    text = article.createdAt,
+                    backgroundColor = Color(0xFFECECEC),
+                    textColor = Color.Black,
+                    iconColor = Color.Gray
+                )
+
+                ArticleInfoPill(
+                    imageUrl = null,
+                    icon = Res.drawable.ic_visibility,
+                    text = article.views.toString(),
+                    backgroundColor = Color(0xFFECECEC),
+                    textColor = Color.Black,
+                    iconColor = Color.Gray
+                )
+            }
+
+            Text(
+                modifier = Modifier.padding(vertical = 12.dp),
+                text = article.title,
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight(700)
+                )
             )
 
-            ArticleInfoPill(
-                imageUrl = null,
-                icon = Res.drawable.ic_schedule,
-                text = article.author,
-                backgroundColor = Color.LightGray,
-                textColor = Color.Gray
-            )
-            ArticleInfoPill(
-                imageUrl = null,
-                icon = Res.drawable.ic_visibility,
-                text = article.author,
-                backgroundColor = Color.LightGray,
-                textColor = Color.Gray
+            Text(
+                modifier = Modifier.padding(4.dp),
+                text = article.body,
+                style = TextStyle(
+                    fontSize = 13.sp,
+                    color = Color.Black
+                )
             )
         }
-
-        Text(
-            modifier = Modifier.padding(vertical = 12.dp),
-            text = article.title,
-            style = TextStyle(
-                fontSize = 24.sp,
-                color = Color.Black,
-                fontWeight = FontWeight(700)
-            )
-        )
     }
 }
 
@@ -198,9 +225,11 @@ fun ArticleInfoPill(
     icon: DrawableResource?,
     text: String,
     backgroundColor: Color,
-    textColor: Color
+    textColor: Color,
+    iconColor: Color
 ) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.background(
             color = backgroundColor,
             shape = RoundedCornerShape(24.dp)
@@ -218,7 +247,7 @@ fun ArticleInfoPill(
             Icon(
                 modifier = Modifier.height(24.dp).width(24.dp),
                 painter = painterResource(it),
-                tint = textColor,
+                tint = iconColor,
                 contentDescription = null
             )
         }
@@ -228,7 +257,7 @@ fun ArticleInfoPill(
             text = text,
             style = TextStyle(
                 color = textColor,
-                fontSize = 14.sp
+                fontSize = 12.sp
             )
         )
     }
