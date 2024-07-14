@@ -51,8 +51,14 @@ data class HomeScreen(
         val articles = viewModel.articles.collectAsState().value
         showBottomNavBar()
 
-        if (isLoading.value) LoadingScreen()
-        else HomeScreenRoot(navigator, articles, hideBottomNavBar)
+        if (isLoading.value) {
+            hideBottomNavBar()
+            LoadingScreen()
+        }
+        else {
+            showBottomNavBar()
+            HomeScreenRoot(navigator, articles, hideBottomNavBar)
+        }
     }
 
 }
